@@ -26,7 +26,7 @@ export default function Page() {
     >
       <div className="sticky top-0 flex h-screen items-center justify-center p-6">
         <div
-          className="flex h-[520px] w-[520px] max-h-[80vw] max-w-[80vw] items-center justify-center shadow-2xl transition-colors duration-500 ease-out"
+          className="flex h-[620px] w-[620px] max-h-[85vh] max-w-[85vw] items-center justify-center shadow-2xl transition-colors duration-500 ease-out"
           style={{ backgroundColor: squareColor }}
         >
           <p

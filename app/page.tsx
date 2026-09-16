@@ -14,8 +14,8 @@ export default function Page() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  const deep = 1200
-  const progress = Math.min(scrollY / deep, 1)
+  const redZoneDeep = 1200
+  const progress = Math.min(scrollY / redZoneDeep, 1)
   const backgroundColor = `hsl(${280 - progress * 90} 55% 40%)`
   const squareColor = `hsl(${0 + progress * 55} 72% 52%)`
 

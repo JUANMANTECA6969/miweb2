@@ -24,7 +24,7 @@ export default function Page() {
       className="min-h-[220vh] transition-colors duration-500 ease-out"
       style={{ backgroundColor }}
     >
-      <div className="sticky top-0 flex min-h-screen items-center justify-center p-6">
+      <div className="sticky top-0 flex h-screen items-center justify-center p-6">
         <div
           className="flex h-[520px] w-[520px] max-h-[80vw] max-w-[80vw] items-center justify-center shadow-2xl transition-colors duration-500 ease-out"
           style={{ backgroundColor: squareColor }}

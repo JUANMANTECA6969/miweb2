@@ -369,19 +369,21 @@ export function ShaderBackground() {
 
     let startTime = Date.now()
     let animationId: number
+    let isRunning = true
 
     const render = () => {
+      if (!isRunning) return
+      
       const now = (Date.now() - startTime) / 1000
-      const dpr = Math.min(window.devicePixelRatio, 2)
 
-      // Set uniforms
+      // Set uniforms with corrected values
       gl.uniform4f(uScene, canvas.width, canvas.height, now * 0.86, 4.0)
-      gl.uniform4f(uShape, 1.26, 0.35, 0.28, 0.0) // scale, intensity, paramA, warp
-      gl.uniform4f(uSurface, 1.82, 1.0, -0.03, 1.48) // detail, contrast, brightness, saturation
-      gl.uniform4f(uFinish, 0.09, 0.0, 0.001, 0.1) // hue, vignette, blur, grain
-      gl.uniform4f(uTransform, 1.0, 0.0, 0.2, 0.0) // seed, rotation, drift, OKLab
+      gl.uniform4f(uShape, 1.26, 0.35, 0.28, 0.0)
+      gl.uniform4f(uSurface, 1.82, 1.12, 0.47, 1.48)
+      gl.uniform4f(uFinish, 0.09 * Math.PI / 180.0, 0.0, 0.001, 0.28)
+      gl.uniform4f(uTransform, 1.0, 0.0, 0.2, 0.0)
       gl.uniform4f(uSpace, 0.0, 0.0, mouseX, mouseY)
-      gl.uniform4f(uCursor, mousePresence, 3.0, 0.45, 0.46) // presence, effect (ripple), strength, radius
+      gl.uniform4f(uCursor, mousePresence, 3.0, 0.45, 0.46)
 
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
       animationId = requestAnimationFrame(render)
@@ -390,19 +392,20 @@ export function ShaderBackground() {
     // Pause when tab is hidden
     const handleVisibilityChange = () => {
       if (document.hidden) {
+        isRunning = false
         cancelAnimationFrame(animationId)
       } else {
-        startTime = Date.now() - (now * 1000)
+        isRunning = true
+        startTime = Date.now()
         render()
       }
     }
 
-    let now = 0
     document.addEventListener("visibilitychange", handleVisibilityChange)
-
     render()
 
     return () => {
+      isRunning = false
       cancelAnimationFrame(animationId)
       window.removeEventListener("resize", handleResize)
       window.removeEventListener("mousemove", handleMouseMove)

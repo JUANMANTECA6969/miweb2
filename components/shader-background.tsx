@@ -295,7 +295,10 @@ export function ShaderBackground() {
     const vertexShader = compileShader(VERTEX_SHADER, gl.VERTEX_SHADER)
     const fragmentShader = compileShader(FRAGMENT_SHADER, gl.FRAGMENT_SHADER)
 
-    if (!vertexShader || !fragmentShader) return
+    if (!vertexShader || !fragmentShader) {
+      console.error("Shader compilation failed")
+      return
+    }
 
     // Link program
     const program = gl.createProgram()!
@@ -338,12 +341,17 @@ export function ShaderBackground() {
       gl.uniform3f(uColors[i], color[0], color[1], color[2])
     })
 
-    // Handle resize
+    // Handle resize with proper WebGL context management
     const handleResize = () => {
+      const rect = canvas.getBoundingClientRect()
       const dpr = Math.min(window.devicePixelRatio, 2)
-      canvas.width = window.innerWidth * dpr
-      canvas.height = window.innerHeight * dpr
-      gl.viewport(0, 0, canvas.width, canvas.height)
+      const width = window.innerWidth * dpr
+      const height = window.innerHeight * dpr
+      
+      canvas.width = width
+      canvas.height = height
+      gl.viewport(0, 0, width, height)
+      gl.useProgram(program)
     }
 
     handleResize()
@@ -374,10 +382,12 @@ export function ShaderBackground() {
     const render = () => {
       if (!isRunning) return
       
-      const now = (Date.now() - startTime) / 1000
+      const elapsed = (Date.now() - startTime) / 1000
 
-      // Set uniforms with corrected values
-      gl.uniform4f(uScene, canvas.width, canvas.height, now * 0.86, 4.0)
+      gl.useProgram(program)
+      
+      // Set uniforms
+      gl.uniform4f(uScene, canvas.width, canvas.height, elapsed * 0.86, 4.0)
       gl.uniform4f(uShape, 1.26, 0.35, 0.28, 0.0)
       gl.uniform4f(uSurface, 1.82, 1.12, 0.47, 1.48)
       gl.uniform4f(uFinish, 0.09 * Math.PI / 180.0, 0.0, 0.001, 0.28)
@@ -420,11 +430,13 @@ export function ShaderBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 -z-10"
+      className="fixed inset-0 -z-10 block"
       style={{
-        width: "100%",
-        height: "100%",
+        width: "100vw",
+        height: "100vh",
         display: "block",
+        margin: 0,
+        padding: 0,
       }}
     />
   )

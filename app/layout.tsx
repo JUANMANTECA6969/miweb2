@@ -2,6 +2,7 @@ import { Geist, Geist_Mono, IBM_Plex_Sans, Space_Grotesk } from "next/font/googl
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { ShaderBackground } from "@/components/shader-background"
 import { cn } from "@/lib/utils";
 
 const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
@@ -25,6 +26,7 @@ export default function RootLayout({
       className={cn("antialiased", fontMono.variable, "font-sans", ibmPlexSans.variable, spaceGroteskHeading.variable)}
     >
       <body>
+        <ShaderBackground />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
